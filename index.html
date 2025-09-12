@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Small Business Idea Generator</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+
+    <body class="gradient-bg min-h-screen p-6">
+        <!-- Toast Notification -->
+        <div id="toast" class="toast"></div>
+
+        <!-- Floating Background Elements -->
+        <div class="fixed inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-20 left-20 w-20 h-20 bg-white opacity-10 rounded-full floating-animation"></div>
+            <div class="absolute top-40 right-32 w-16 h-16 bg-white opacity-5 rounded-full floating-animation"
+                 style="animation-delay: -2s;"></div>
+            <div class="absolute bottom-32 left-40 w-12 h-12 bg-white opacity-15 rounded-full floating-animation"
+                 style="animation-delay: -4s;"></div>
+            <div class="absolute bottom-20 right-20 w-24 h-24 bg-white opacity-8 rounded-full floating-animation"
+                 style="animation-delay: -1s;"></div>
+        </div>
+
+        <div class="max-w-6xl mx-auto relative z-10">
+            <!-- Header Section -->
+            <div class="text-center mb-8">
+                <h1 class="text-4xl md:text-5xl font-bold text-white mb-4 floating-animation">
+                    🚀 Small Business Idea Generator
+                </h1>
+                <p class="text-white text-lg opacity-90">Transform your vision into reality with AI-powered business
+                    insights</p>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="glass-effect p-2 rounded-3xl mb-8">
+                <div class="flex space-x-2">
+                    <button onclick="switchTab('generator')" id="tab-generator"
+                            class="flex-1 py-3 px-6 rounded-2xl text-white font-medium transition-all duration-300 tab-active">
+                        ✨ Generator
+                    </button>
+                    <button onclick="switchTab('history')" id="tab-history"
+                            class="flex-1 py-3 px-6 rounded-2xl text-white font-medium transition-all duration-300">
+                        📚 History (<span id="historyCount">0</span>)
+                    </button>
+                    <button onclick="switchTab('favorites')" id="tab-favorites"
+                            class="flex-1 py-3 px-6 rounded-2xl text-white font-medium transition-all duration-300">
+                        ⭐ Favorites (<span id="favoritesCount">0</span>)
+                    </button>
+                    <button onclick="switchTab('chat')" id="tab-chat"
+                            class="flex-1 py-3 px-6 rounded-2xl text-white font-medium transition-all duration-300">
+                        💬 Chat Assistant
+                    </button>
+                </div>
+            </div>
+
+            <!-- Update the chat tab content -->
+            <div id="chat-tab" class="tab-content hidden">
+                <div class="glass-effect p-6 rounded-3xl shadow-xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-2xl font-bold text-white">💬 Business Idea Assistant</h2>
+                        <div class="relative">
+                            <select id="chatContextSelect"
+                                    class="border-2 border-white/20 p-2 rounded-xl bg-white/10 text-white focus:border-white focus:outline-none">
+                                <option value="" class="bg-gray-800">Select idea context...</option>
+                                <option value="current" class="bg-gray-800" id="currentIdeaOption">Current Idea</option>
+                                <!-- History items will be added dynamically -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/10 rounded-2xl p-4 h-96 overflow-y-auto mb-4" id="chatMessages">
+                        <div class="text-center text-white/60 py-16">
+                            <span class="text-6xl mb-4 block">💬</span>
+                            <p>Ask me anything about your business ideas!</p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <input id="chatInput" type="text" placeholder="Type your question here..."
+                               class="flex-1 border-2 border-white/20 p-4 rounded-2xl bg-white/10 text-white placeholder-white/60 focus:border-white focus:outline-none focus:ring-2 focus:ring-white/30 transition-all duration-300">
+                        <button onclick="sendChatMessage()"
+                                class="bg-white text-gray-800 p-4 rounded-2xl font-bold hover:bg-gray-100 transition-all duration-300">
+                            Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Generator Tab -->
+            <div id="generator-tab" class="tab-content">
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <!-- Main Form Card -->
+                    <div class="glass-effect p-8 rounded-3xl shadow-2xl hover-scale">
+                        <div class="space-y-6">
+                            <!-- Industry Input -->
+                            <div class="relative">
+                                <label class="block text-white font-medium mb-2">🏢 Industry</label>
+                                <input id="industry" type="text" placeholder="e.g., Technology, Food, Fashion..."
+                                       class="w-full border-2 border-white/20 p-4 rounded-2xl bg-white/10 text-white placeholder-white/60 focus:border-white focus:outline-none focus:ring-2 focus:ring-white/30 transition-all duration-300">
+                            </div>
+
+                            <!-- Budget Input -->
+                            <div class="relative">
+                                <label class="block text-white font-medium mb-2">💰 Budget</label>
+                                <input id="budget" type="number" placeholder="Enter your startup budget..."
+                                       class="w-full border-2 border-white/20 p-4 rounded-2xl bg-white/10 text-white placeholder-white/60 focus:border-white focus:outline-none focus:ring-2 focus:ring-white/30 transition-all duration-300">
+                            </div>
+
+                            <!-- Tone Select -->
+                            <div class="relative">
+                                <label class="block text-white font-medium mb-2">🎭 Tone (optional)</label>
+                                <select id="tone"
+                                        class="w-full border-2 border-white/20 p-4 rounded-2xl bg-white/10 text-white focus:border-white focus:outline-none focus:ring-2 focus:ring-white/30 transition-all duration-300">
+                                    <option value="" class="bg-gray-800">Select tone...</option>
+                                    <option value="friendly" class="bg-gray-800">😊 Friendly</option>
+                                    <option value="professional" class="bg-gray-800">💼 Professional</option>
+                                    <option value="humorous" class="bg-gray-800">😄 Humorous</option>
+                                    <option value="innovative" class="bg-gray-800">🚀 Innovative</option>
+                                    <option value="luxury" class="bg-gray-800">💎 Luxury</option>
+                                </select>
+                            </div>
+
+                            <!-- Generate Button -->
+                            <button onclick="generateIdea()" id="generateBtn"
+                                    class="w-full bg-white text-gray-800 p-4 rounded-2xl font-bold text-lg hover:bg-gray-100 transition-all duration-300 sparkle hover-scale pulse-glow">
+                                <span id="btnText">✨ Generate Ideas</span>
+                                <span id="loadingText" class="hidden loading-dots">Generating amazing ideas</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions & Stats -->
+                    <div class="space-y-6">
+                        <!-- Stats Card -->
+                        <div class="glass-effect p-6 rounded-3xl shadow-xl">
+                            <h3 class="text-xl font-bold text-white mb-4">📊 Your Stats</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold text-white" id="totalGenerated">0</div>
+                                    <div class="text-white/70 text-sm">Ideas Generated</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold text-white" id="totalFavorites">0</div>
+                                    <div class="text-white/70 text-sm">Favorites Saved</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Popular Industries -->
+                        <div class="glass-effect p-6 rounded-3xl shadow-xl">
+                            <h3 class="text-xl font-bold text-white mb-4">🔥 Quick Industries</h3>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="setIndustry('Technology')"
+                                        class="bg-white/20 text-white p-2 rounded-xl hover:bg-white/30 transition-all text-sm">Tech</button>
+                                <button onclick="setIndustry('Food & Beverage')"
+                                        class="bg-white/20 text-white p-2 rounded-xl hover:bg-white/30 transition-all text-sm">Food</button>
+                                <button onclick="setIndustry('E-commerce')"
+                                        class="bg-white/20 text-white p-2 rounded-xl hover:bg-white/30 transition-all text-sm">E-commerce</button>
+                                <button onclick="setIndustry('Health & Wellness')"
+                                        class="bg-white/20 text-white p-2 rounded-xl hover:bg-white/30 transition-all text-sm">Health</button>
+                                <button onclick="setIndustry('Sustainability')"
+                                        class="bg-white/20 text-white p-2 rounded-xl hover:bg-white/30 transition-all text-sm">Sustainability</button>
+                                <button onclick="setIndustry('Fitness')"
+                                        class="bg-white/20 text-white p-2 rounded-xl hover:bg-white/30 transition-all text-sm">Fitness</button>
+                                <button onclick="setIndustry('Education')"
+                                        class="bg-white/20 text-white p-2 rounded-xl hover:bg-white/30 transition-all text-sm">Education</button>
+                                <button onclick="setIndustry('Beauty')"
+                                        class="bg-white/20 text-white p-2 rounded-xl hover:bg-white/30 transition-all text-sm">Beauty</button>
+                            </div>
+                        </div>
+
+                        <!-- Quick Budgets -->
+                        <div class="glass-effect p-6 rounded-3xl shadow-xl">
+                            <h3 class="text-xl font-bold text-white mb-4">💸 Quick Budgets</h3>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button onclick="setBudget('1000')"
+                                        class="bg-white/20 text-white p-2 rounded-xl hover:bg-white/30 transition-all text-sm">$1K</button>
+                                <button onclick="setBudget('5000')"
+                                        class="bg-white/20 text-white p-2 rounded-xl hover:bg-white/30 transition-all text-sm">$5K</button>
+                                <button onclick="setBudget('10000')"
+                                        class="bg-white/20 text-white p-2 rounded-xl hover:bg-white/30 transition-all text-sm">$10K</button>
+                                <button onclick="setBudget('25000')"
+                                        class="bg-white/20 text-white p-2 rounded-xl hover:bg-white/30 transition-all text-sm">$25K</button>
+                                <button onclick="setBudget('50000')"
+                                        class="bg-white/20 text-white p-2 rounded-xl hover:bg-white/30 transition-all text-sm">$50K</button>
+                                <button onclick="setBudget('100000')"
+                                        class="bg-white/20 text-white p-2 rounded-xl hover:bg-white/30 transition-all text-sm">$100K</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Results Section -->
+                <div id="results" class="hidden mt-8">
+                    <div class="grid lg:grid-cols-3 gap-6">
+                        <!-- Business Idea Card -->
+                        <div class="glass-effect p-6 rounded-3xl shadow-xl hover-scale slide-in">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center">
+                                    <div
+                                         class="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mr-4">
+                                        <span class="text-2xl">💡</span>
+                                    </div>
+                                    <h2 class="text-2xl font-bold text-white">Business Idea</h2>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <button onclick="copyToClipboard('ideaOutput')"
+                                            class="copy-btn text-white p-2 rounded-lg">
+                                        📋 Copy
+                                    </button>
+                                    <span class="favorite-star text-2xl" onclick="toggleFavorite('current')"
+                                          id="currentFavStar">⭐</span>
+                                </div>
+                            </div>
+                            <div class="bg-white/10 p-4 rounded-2xl">
+                                <p id="ideaOutput" class="text-white text-lg leading-relaxed"></p>
+                            </div>
+                            <div class="mt-3 flex flex-wrap" id="ideaTags"></div>
+                        </div>
+
+                        <!-- Brand Names Card -->
+                        <div class="glass-effect p-6 rounded-3xl shadow-xl hover-scale slide-in"
+                             style="animation-delay: 0.1s;">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center">
+                                    <div
+                                         class="w-12 h-12 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full flex items-center justify-center mr-4">
+                                        <span class="text-2xl">🏷️</span>
+                                    </div>
+                                    <h2 class="text-2xl font-bold text-white">Brand Names</h2>
+                                </div>
+                                <button onclick="copyToClipboard('brandOutput')"
+                                        class="copy-btn text-white p-2 rounded-lg">
+                                    📋 Copy All
+                                </button>
+                            </div>
+                            <div class="grid gap-3">
+                                <ul id="brandOutput" class="space-y-2"></ul>
+                            </div>
+                        </div>
+
+                        <!-- Captions Card -->
+                        <div class="glass-effect p-6 rounded-3xl shadow-xl hover-scale slide-in"
+                             style="animation-delay: 0.2s;">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center">
+                                    <div
+                                         class="w-12 h-12 bg-gradient-to-r from-blue-400 to-cyan-500 rounded-full flex items-center justify-center mr-4">
+                                        <span class="text-2xl">📱</span>
+                                    </div>
+                                    <h2 class="text-2xl font-bold text-white">Social Media Captions</h2>
+                                </div>
+                                <button onclick="copyToClipboard('captionOutput')"
+                                        class="copy-btn text-white p-2 rounded-lg">
+                                    📋 Copy All
+                                </button>
+                            </div>
+                            <div class="space-y-3">
+                                <ul id="captionOutput" class="space-y-2"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Tab -->
+            <div id="history-tab" class="tab-content hidden">
+                <div class="glass-effect p-6 rounded-3xl shadow-xl mb-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-2xl font-bold text-white">📚 Your Idea History</h2>
+                        <div class="flex items-center space-x-4">
+                            <input id="searchHistory" type="text" placeholder="Search ideas..."
+                                   onkeyup="filterHistory()"
+                                   class="border-2 border-white/20 p-2 rounded-xl bg-white/10 text-white placeholder-white/60 focus:border-white focus:outline-none">
+                            <button onclick="exportHistory()"
+                                    class="export-btn bg-white/10 text-white p-2 rounded-xl hover:bg-white/20 transition-all">
+                                📤 Export
+                            </button>
+                            <button onclick="clearHistory()"
+                                    class="bg-red-500/20 text-white p-2 rounded-xl hover:bg-red-500/30 transition-all">
+                                🗑️ Clear All
+                            </button>
+                        </div>
+                    </div>
+                    <div id="historyList" class="space-y-4">
+                        <div class="text-center text-white/60 py-8">
+                            <span class="text-6xl mb-4 block">📝</span>
+                            <p>No ideas generated yet. Start creating some amazing business ideas!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Favorites Tab -->
+            <div id="favorites-tab" class="tab-content hidden">
+                <div class="glass-effect p-6 rounded-3xl shadow-xl mb-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-2xl font-bold text-white">⭐ Your Favorite Ideas</h2>
+                        <div class="flex items-center space-x-4">
+                            <input id="searchFavorites" type="text" placeholder="Search favorites..."
+                                   onkeyup="filterFavorites()"
+                                   class="border-2 border-white/20 p-2 rounded-xl bg-white/10 text-white placeholder-white/60 focus:border-white focus:outline-none">
+                            <button onclick="exportFavorites()"
+                                    class="export-btn bg-white/10 text-white p-2 rounded-xl hover:bg-white/20 transition-all">
+                                📤 Export
+                            </button>
+                        </div>
+                    </div>
+                    <div id="favoritesList" class="space-y-4">
+                        <div class="text-center text-white/60 py-8">
+                            <span class="text-6xl mb-4 block">⭐</span>
+                            <p>No favorites saved yet. Star your favorite ideas to save them here!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="text-center mt-8 text-white/60">
+                <p>Powered by AI • Built with creativity ✨</p>
+            </div>
+        </div>
+
+        <script src="script.js"></script>
+    </body>
+</html>
