@@ -3,8 +3,7 @@
 
 
 // --- Constants ---
-const API_KEY = "AIzaSyCnmAEXvB-TKJpDATCxiN5rkfUORZZf7VI";
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+const BACKEND_URL = "http://localhost:5000/api/gemini";
 
 // --- State ---
 let ideaHistory = [];
@@ -364,10 +363,10 @@ Return output in this JSON format:
 	"tags": ["...", "...", "..."]
 }
 `;
-		const res = await fetch(API_URL, {
+		const res = await fetch(BACKEND_URL, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+			body: JSON.stringify({ prompt })
 		});
 		const data = await res.json();
 		const text = data?.candidates?.[0]?.content?.parts?.[0]?.text.replace('```json', "").replace('```', "") || "";
@@ -476,10 +475,10 @@ async function generateChatResponse(message, loadingId) {
 		Provide a helpful, concise response with practical advice.`;
 		let response;
 		try {
-			response = await fetch(API_URL, {
+			response = await fetch(BACKEND_URL, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+				body: JSON.stringify({ prompt })
 			});
 		} catch (e) {
 			addChatMessage('assistant', "<span style='color:red'>Sorry, I encountered an error. Please try again.</span>");
@@ -499,7 +498,7 @@ async function generateChatResponse(message, loadingId) {
 			document.getElementById(loadingId).remove();
 		}
 		addChatMessage('assistant', responseText);
-		const res = await fetch(API_URL, {
+		const res = await fetch(GEMINI_API_URL, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
@@ -720,12 +719,10 @@ Return output in this JSON format:
 }
 `;
 
-		const res = await fetch(API_URL, {
+		const res = await fetch(BACKEND_URL, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
-				contents: [{ parts: [{ text: prompt }] }]
-			})
+			body: JSON.stringify({ prompt })
 		});
 
 		const data = await res.json();
@@ -1093,12 +1090,10 @@ async function generateChatResponse(message, loadingId) {
 	User question: ${message}
 	Provide a helpful, concise response with practical advice.`;
 
-		const res = await fetch(API_URL, {
+		const res = await fetch(BACKEND_URL, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
-				contents: [{ parts: [{ text: prompt }] }]
-			})
+			body: JSON.stringify({ prompt })
 		});
 
 		const data = await res.json();
@@ -1254,12 +1249,10 @@ async function generateChatResponse(message, loadingId) {
 
 	Provide a helpful, concise response with practical advice. If the question relates to the business idea context, focus your answer specifically on that idea.`;
 
-		const res = await fetch(API_URL, {
+		const res = await fetch(BACKEND_URL, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
-				contents: [{ parts: [{ text: prompt }] }]
-			})
+			body: JSON.stringify({ prompt })
 		});
 
 		const data = await res.json();
