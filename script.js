@@ -64,9 +64,32 @@ function setBudget(budget) {
 
 function copyToClipboard(elementId) {
 	// Copies text from element to clipboard
+
 	const element = document.getElementById(elementId);
 	let textToCopy = '';
-	if (element.tagName === 'P') {
+	if (!element) {
+		// Try to find the button and copy from its parent li
+		const btn = document.querySelector(`button[onclick*='${elementId}']`);
+		if (btn && btn.parentElement && btn.parentElement.tagName === 'LI') {
+			// For brand/caption, get the first span with text, or the text node
+			const spans = btn.parentElement.querySelectorAll('span');
+			if (spans.length > 0) {
+				// For brand names: font-semibold, for captions: italic
+				let found = Array.from(spans).find(s => s.classList.contains('font-semibold') || s.classList.contains('italic'));
+				if (found) {
+					textToCopy = found.textContent;
+				} else {
+					// fallback: first span
+					textToCopy = spans[0].textContent;
+				}
+			} else {
+				// Fallback: get all text except button
+				textToCopy = Array.from(btn.parentElement.childNodes)
+					.filter(n => n.nodeType === 3 || (n.nodeType === 1 && n.tagName !== 'BUTTON'))
+					.map(n => n.textContent).join(' ').trim();
+			}
+		}
+	} else if (element.tagName === 'P' || element.tagName === 'SPAN') {
 		textToCopy = element.textContent;
 	} else if (element.tagName === 'UL') {
 		const items = Array.from(element.querySelectorAll('li')).map(li => {
@@ -75,10 +98,14 @@ function copyToClipboard(elementId) {
 		});
 		textToCopy = items.join('\n');
 	}
-	navigator.clipboard.writeText(textToCopy).then(() => {
-		showToast('Copied to clipboard!');
-		highlightCopyButton(elementId);
-	});
+	if (textToCopy) {
+		navigator.clipboard.writeText(textToCopy).then(() => {
+			showToast('Copied to clipboard!');
+			highlightCopyButton(elementId);
+		});
+	} else {
+		showToast('Copy failed: No text found');
+	}
 }
 
 function highlightCopyButton(elementId) {

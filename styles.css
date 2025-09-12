@@ -6,7 +6,7 @@ body {
 }
 
 .gradient-bg {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(269deg, #8f7434 0%, #000000 100%);
 }
 
 .glass-effect {
@@ -136,8 +136,8 @@ body {
 }
 
 .tag-blue {
-  background-color: rgba(59, 130, 246, 0.2);
-  color: #3b82f6;
+  background-color: rgb(255 255 255 / 20%);
+	color: #0d1b4c;
 }
 
 .tag-green {
@@ -146,8 +146,8 @@ body {
 }
 
 .tag-purple {
-  background-color: rgba(168, 85, 247, 0.2);
-  color: #a855f7;
+  background-color: rgb(174 109 235 / 42%);
+	color: #622d95;
 }
 
 .tag-yellow {
@@ -156,8 +156,8 @@ body {
 }
 
 .tag-red {
-  background-color: rgba(239, 68, 68, 0.2);
-  color: #ef4444;
+  background-color: rgb(14 189 197 / 40%);
+	color: #520000;
 }
 
 .toast {
