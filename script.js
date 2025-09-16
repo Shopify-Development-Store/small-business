@@ -3,7 +3,7 @@
 
 
 // --- Constants ---
-const BACKEND_URL = "http://localhost:5000/api/gemini";
+const BACKEND_URL = "https://small-business-i4pz.onrender.com/api/gemini";
 
 // --- State ---
 let ideaHistory = [];
