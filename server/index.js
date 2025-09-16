@@ -5,7 +5,14 @@ const fetch = require('node-fetch');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+const corsOptions = {
+    origin: 'https://small-business-hx9gnbx95-deepaks-projects-87164fb3.vercel.app',
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type'],
+    credentials: true
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // POST /api/gemini
