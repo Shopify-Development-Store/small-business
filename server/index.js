@@ -6,14 +6,31 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // CORS configuration
-const corsOptions = {
-    origin: 'https://small-business-eqs8mhdz6-deepaks-projects-87164fb3.vercel.app',
-    methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type'],
-    credentials: true
-};
 
-app.use(cors(corsOptions));
+const allowedOrigins = [
+    'https://small-business-ten.vercel.app',
+    'https://small-business-eqs8mhdz6-deepaks-projects-87164fb3.vercel.app'
+];
+
+// const corsOptions = {
+//     origin: 'https://small-business-eqs8mhdz6-deepaks-projects-87164fb3.vercel.app',
+//     methods: ['GET', 'POST', 'OPTIONS'],
+//     allowedHeaders: ['Content-Type'],
+//     credentials: true
+// };
+
+// app.use(cors(corsOptions));
+
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    }
+}));
+
 app.options('*', cors(corsOptions)); // Handle preflight requests
 app.use(express.json());
 
