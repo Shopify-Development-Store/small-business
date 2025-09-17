@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 5000;
 
 // CORS configuration
 const corsOptions = {
-    origin: 'https://small-business-ten.vercel.app/',
+    origin: ['https://small-business-ten.vercel.app/', 'https://small-business-eqs8mhdz6-deepaks-projects-87164fb3.vercel.app'],
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type'],
     credentials: true
