@@ -20,8 +20,11 @@ app.use(express.json());
 // POST /api/gemini
 app.post('/api/gemini', async (req, res) => {
     const { prompt } = req.body;
+    console.log('Received prompt:', prompt);
     const apiKey = process.env.GEMINI_API_KEY;
     const apiUrl = process.env.GEMINI_API_URL;
+    console.log('apiKey:', apiKey);
+    console.log('apiUrl:', apiUrl);
 
     if (!apiKey || !apiUrl) {
         return res.status(500).json({ error: 'API key or URL not set.' });
