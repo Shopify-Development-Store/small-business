@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 5000;
 
 // CORS configuration
 const corsOptions = {
-    origin: 'https://small-business-hx9gnbx95-deepaks-projects-87164fb3.vercel.app',
+    origin: '*',
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type'],
     credentials: true
@@ -20,7 +20,6 @@ app.use(express.json());
 // POST /api/gemini
 app.post('/api/gemini', async (req, res) => {
     const { prompt } = req.body;
-    console.log('Received prompt:', prompt);
     const apiKey = process.env.GEMINI_API_KEY;
     const apiUrl = process.env.GEMINI_API_URL;
     console.log('apiKey:', apiKey);
